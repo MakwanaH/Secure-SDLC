@@ -1,4 +1,4 @@
-# TEAM1 Dojo https://18.207.88.48:8081
+# TEAM1 Dojo 
 # About the Secure Coding Dojo
 The Secure Coding Dojo is a platform for delivering secure coding training. 
 While it comes with its own vulnerable training application (the Insecure.Inc website) the training portal can be used in conjunction with other  training applications.
