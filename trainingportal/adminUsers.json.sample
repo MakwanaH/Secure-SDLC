@@ -1,0 +1,8 @@
+{
+	"admin": {
+		"givenName": "Admin",
+		"familyName": "Admin",
+		"passSalt": "use encryptConfig => genLocalUser to generate",
+		"passHash": ""
+	}
+}
