@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Coding Dojo &gt; admin Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/public/jquery/dist/jquery.min.js"></script>
+  <script src="/public/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/public/angular/angular.min.js"></script>
+  <link href="/public/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/public/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+
+<script>
+    var app = angular.module("configureSolution", []);
+    window.getAjaxOpts = function(){
+        return {
+            headers: {
+                "xsrfToken": window.localStorage.getItem("XSRF_TOKEN")
+            }
+        };
+    }
+    app.controller("solutionConfig", function($scope, $http) {
+
+        $scope.submit = function() {
+            let challengeConfig = {};
+            challengeConfig.challengeId = challengeId.value.trim();
+            challengeConfig.hide = hide.checked;
+            $http.post("/api/challenges/configure-solution",
+                {"change": challengeConfig}, window.getAjaxOpts())
+                .then(function(response) {
+                    if (response != null && response.data != null) {
+                        if (response.data.status == 200) {
+                            $scope.isSuccess = true;
+                            $scope.isError = false;
+                            $scope.errorMessage = null;
+                        } else {
+                            $scope.isSuccess = false;
+                            $scope.isError = true;
+                            $scope.errorMessage = response.data.statusMessage
+                        }
+                    }
+                },function(errorResponse){
+                    $scope.isError = true;
+                    $scope.isSuccess = false;
+                    $scope.errorMessage = "A http error has occurred.";
+
+                });
+        }
+    });
+</script>
+</head>
+
+<body  style="margin-top: 100px" ng-app="configureSolution" ng-controller="solutionConfig">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/main">Secure Coding Dojo &gt; Main page</a>
+ </nav>
+<div id="container" class="container">
+        <div>Insert the challenge ID below and use the toggle to choose visibility</div>
+        <div class="alert alert-success" id="successMessage" ng-if="isSuccess">
+            Challenge solution visibility updated
+        </div>
+
+        <div class="alert alert-danger" id="errorMessage" ng-if="isError">
+            {{errorMessage}}
+        </div>
+        <div class="form-group">
+            <label for="challengeId">Challenge Id:</label>
+            <input type="text" class="form-control" id="challengeId" name="challengeId">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="hide" name="hide" value="hide">
+            <label for="hide">Check to hide, uncheck to make it visible</label>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
+</div>
+
+</body>
+</html>
